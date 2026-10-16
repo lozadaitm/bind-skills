@@ -18,7 +18,7 @@ cd bind-skills
 powershell -ExecutionPolicy Bypass -File .\install.ps1
 ```
 
-`install.ps1` crea un junction por skill en `%USERPROFILE%\.claude\skills\`. Así el repo es la fuente: editas aquí y `git pull` actualiza las skills. Si ya había una carpeta con el mismo nombre, se respalda como `<nombre>.bak-<fecha>`.
+`install.ps1` crea un junction por skill en `%USERPROFILE%\.claude\skills\`. Así el repo es la fuente: editas aquí y `git pull` actualiza las skills. Si ya había una carpeta con el mismo nombre, se mueve a `%USERPROFILE%\.claude\skills-backup\<nombre>-<fecha>`.
 
 ## Agregar una skill
 

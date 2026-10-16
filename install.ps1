@@ -1,11 +1,13 @@
 # Enlaza cada skill de este repo a ~/.claude/skills/<nombre> con un junction.
 # Uso: powershell -ExecutionPolicy Bypass -File .\install.ps1
-# Si ya existe una carpeta real con el mismo nombre, se renombra a <nombre>.bak-<fecha> (no se borra).
+# Si ya existe una carpeta real con el mismo nombre, se mueve a ~/.claude/skills-backup/<nombre>-<fecha>
+# (fuera de skills/, para que Claude no la cargue como skill duplicada).
 
 $ErrorActionPreference = 'Stop'
 
 $repoSkills = Join-Path $PSScriptRoot 'skills'
 $target = Join-Path $env:USERPROFILE '.claude\skills'
+$backupDir = Join-Path $env:USERPROFILE '.claude\skills-backup'
 
 if (-not (Test-Path $target)) {
     New-Item -ItemType Directory -Force $target | Out-Null
@@ -20,8 +22,9 @@ foreach ($skill in Get-ChildItem -Directory $repoSkills) {
             # Enlace previo: se reemplaza.
             $item.Delete()
         } else {
-            $backup = "$dest.bak-$(Get-Date -Format 'yyyyMMdd-HHmmss')"
-            Rename-Item $dest $backup
+            New-Item -ItemType Directory -Force $backupDir | Out-Null
+            $backup = Join-Path $backupDir "$($skill.Name)-$(Get-Date -Format 'yyyyMMdd-HHmmss')"
+            Move-Item $dest $backup
             Write-Host "Respaldo: $backup"
         }
     }
